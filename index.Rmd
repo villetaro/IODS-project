@@ -1,5 +1,5 @@
 ---
-title: "IODS course project"
+title: "Ville Aro"
 output:
   html_document:
     theme: cosmo
