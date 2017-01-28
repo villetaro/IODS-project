@@ -1,9 +1,11 @@
   
 # About the project
 
-- This is a great course to learn R! Testi
+- This is a great course to learn R!
 
 https://github.com/villetaro/IODS-project
+
+Moving forward with analysis!
 
 
 
