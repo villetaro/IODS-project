@@ -1,7 +1,18 @@
-# Insert chapter 2 title here
+# Chapter 2: My data analysis
 
 *Describe the work you have done this week and summarize your learning.*
 
 - Describe your work and results clearly. 
 - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
 - Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+
+#2.1 Opening the data and checking the structure. I run the codes in chapter2.R as i doesn't seem to work in here
+
+read.table("~/GitHub/IODS-project/data/learning2014.csv")
+str(learning2014)
+
+- The data has 166 observations and now 7 variables. Variables contain gender, age, attitude, deep learning, strategic learning, surface learning and points.
+
+#2.2 I drew the data as ggplot picture and modified it a bit.
+
+![Here is my ggplot!](C:\Users\VStore\Documents\GitHub\IODS-project\data/Rplot2.2KUVA.png)

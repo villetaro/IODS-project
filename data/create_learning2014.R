@@ -55,5 +55,6 @@ write.table(learning2014, file = "learning2014.csv", append = FALSE, quote = TRU
             eol = "\n", na = "NA", dec = ".", row.names = TRUE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "")
+
 read.table("~/GitHub/IODS-project/data/learning2014.csv")
 str(learning2014)
