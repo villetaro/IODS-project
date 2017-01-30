@@ -41,3 +41,16 @@ learning2014 <- filter(learning2014, Points > 0)
 
 # see the structure of the new dataset
 str(learning2014)
+
+install.packages("ggplot2")
+
+#Indeed the structure seems to have 166 observations of 7 variables.
+
+setwd("~/GitHub/IODS-project/data")
+write.csv("learning2014", "learning2014.csv")
+write.table(learning2014, file = "learning2014.csv", append = FALSE, quote = TRUE, sep = " ",
+            eol = "\n", na = "NA", dec = ".", row.names = TRUE,
+            col.names = TRUE, qmethod = c("escape", "double"),
+            fileEncoding = "")
+
+
