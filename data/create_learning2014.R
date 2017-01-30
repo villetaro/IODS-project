@@ -46,11 +46,14 @@ install.packages("ggplot2")
 
 #Indeed the structure seems to have 166 observations of 7 variables.
 
+#Setting  working directory of you R session the iods project folder.
 setwd("~/GitHub/IODS-project/data")
-write.csv("learning2014", "learning2014.csv")
+
+#Saving the data and then opening it again! It kept the same sctructure which means we can move to the part 2 of these exercises!
+
 write.table(learning2014, file = "learning2014.csv", append = FALSE, quote = TRUE, sep = " ",
             eol = "\n", na = "NA", dec = ".", row.names = TRUE,
             col.names = TRUE, qmethod = c("escape", "double"),
             fileEncoding = "")
-
-
+read.table("~/GitHub/IODS-project/data/learning2014.csv")
+str(learning2014)
