@@ -1,18 +1,28 @@
 # Chapter 2: My data analysis
 
-*Describe the work you have done this week and summarize your learning.*
-
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
-
-#2.1 Opening the data and checking the structure. I run the codes in chapter2.R as i doesn't seem to work in here
+- #2.1 Opening the data and checking the structure. I run the codes in chapter2.R as i doesn't seem to work in here
 
 read.table("~/GitHub/IODS-project/data/learning2014.csv")
 str(learning2014)
 
 - The data has 166 observations and now 7 variables. Variables contain gender, age, attitude, deep learning, strategic learning, surface learning and points.
 
-#2.2 I drew the data as ggplot picture and modified it a bit.
+- #2.2 I drew the data as ggplot picture and modified it a bit.
 
-![Here is my ggplot!](C:\Users\VStore\Documents\GitHub\IODS-project\data/Rplot2.2KUVA.png)
+![](C:\Users\VStore\Documents\GitHub\IODS-project\data/Rplot2.2KUVA.png)
+
+The summary looks like this at the moment:
+ gender       Age           Attitude          deep            stra      
+ F:110   Min.   :17.00   Min.   :14.00   Min.   :1.583   Min.   :1.250  
+ M: 56   1st Qu.:21.00   1st Qu.:26.00   1st Qu.:3.333   1st Qu.:2.625  
+         Median :22.00   Median :32.00   Median :3.667   Median :3.188  
+         Mean   :25.51   Mean   :31.43   Mean   :3.680   Mean   :3.121  
+         3rd Qu.:27.00   3rd Qu.:37.00   3rd Qu.:4.083   3rd Qu.:3.625  
+         Max.   :55.00   Max.   :50.00   Max.   :4.917   Max.   :5.000  
+      surf           Points     
+ Min.   :1.583   Min.   : 7.00  
+ 1st Qu.:2.417   1st Qu.:19.00  
+ Median :2.833   Median :23.00  
+ Mean   :2.787   Mean   :22.72  
+ 3rd Qu.:3.167   3rd Qu.:27.75  
+ Max.   :4.333   Max.   :33.00  

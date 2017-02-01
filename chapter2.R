@@ -17,3 +17,4 @@ library(ggplot2)
 # create a more advanced plot matrix with ggpairs()
 p <- ggpairs(learning2014, mapping = aes(), lower = list(combo = wrap("facethist", bins = 20)))
 p
+summary(learning2014)
