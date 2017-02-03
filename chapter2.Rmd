@@ -9,9 +9,19 @@ learning2014 <- read.table(file="http://s3.amazonaws.com/assets.datacamp.com/pro
 str(learning2014)
 
 ```
-- The data has 166 observations and now 7 variables. Variables contain gender, age, attitude, deep learning, strategic learning, surface learning and points.
+- The data has 166 observations and now 7 variables. Variables contain  gender, age, points from the exam and attitude towards statistics. There are three sum variables from combining questions measuring "strategic approach", "deep approach", and "surface approach".
 
-- Then lets draw the data and see how it look graphically.
+- #2.2 Let's first look at he basic numbers of the data. After that we can begin to analyse it.
+
+```{r}
+summary(learning2014)
+head(learning2014)
+str(learning2014)
+
+```
+There is about twice as much females comparered to men. Age ranges from 17 to 55 with mean being 25.51. This gives us a big range in the scale of age. The variable points has a mean of 22.72 with the minimum being 7.00 and the maximum being 33.0.
+
+Now we can also make a graphical overview of the data with ggplot2.
 
 ```{r}
 # access the GGally and ggplot2 libraries
@@ -20,14 +30,18 @@ library(ggplot2)
 
 p <- ggpairs(learning2014, mapping = aes(col=gender, alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
 p
-summary(learning2014)
 ```
 
+The grapical overview could have been a little bit better. I deciced to highlight the gender as I think it was the most important variable in the model. 
+
+From the graph we can see the correlations between the different variables. The highest correlation is between attitude and points. The lowest correlation is a close battle with age - attitude and age - points. Overall the variable age seems to have quite low correlations compared to the others.
+
+- #2.3 Now we fit the model
 ```{r}
 malli <- lm(points ~ attitude + stra + surf, data=learning2014)
 summary(malli)
 ```
-The only variable with enough significance in p-value is attitude. This is the reason why we remove stra and surf variables from the model.
+The only variable with enough significance in p-value is attitude. This is the reason why we remove stra and surf variables from the model. Now we fit it again.
 
 ```{r}
 malli <- lm(points ~ attitude, data=learning2014)
