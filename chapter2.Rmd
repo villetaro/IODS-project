@@ -43,13 +43,22 @@ summary(malli)
 ```
 The only variable with enough significance in p-value is attitude. This is the reason why we remove stra and surf variables from the model. Now we fit it again.
 
+
 ```{r}
 malli <- lm(points ~ attitude, data=learning2014)
 summary(malli)
 ```
-Whoo! We got the model!
+
+The multiple R-squared refers to the usual R^2. R^2 can be interpreted as the fraction of the variance of the result variable that is explained by the explanatory variables.  In the model R^2 is 0.1906 which is quite low so one could say that it doesn't explain the result variable too well. 
+
+
 ```{r}
 library(ggplot2)
 plot(malli, which=c(1, 2,5), col = "turquoise2",  lwd = 3)
 ```
 
+"Residuals vs Fitted"-plot shows whether the residuals have non-linear patterns. Comparing this picture with the models first three assumptions we seem to have a few outliers. Otherwise everything looks good.
+
+"Normal Q-Q"-plot shows whether the residuals are normally distributed. This means we can see how well the theoretical residuals correspond to the actual ones.
+
+"Residuals vs Leverage" helps us to look for the outliers.
