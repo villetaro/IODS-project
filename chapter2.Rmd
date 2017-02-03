@@ -1,6 +1,6 @@
 # Chapter 2: My data analysis
 
-- #2.1 Opening the data and checking the structure
+- #2.1 Opening the data and checking the structure. Let's see what happens!
 
 ```{r}
 
@@ -11,16 +11,31 @@ str(learning2014)
 ```
 - The data has 166 observations and now 7 variables. Variables contain gender, age, attitude, deep learning, strategic learning, surface learning and points.
 
-- #2.2 I drew the data as ggplot picture and modified it a bit.
+- Then lets draw the data and see how it look graphically.
 
 ```{r}
 # access the GGally and ggplot2 libraries
 library(GGally)
 library(ggplot2)
 
-# create a more advanced plot matrix with ggpairs()
 p <- ggpairs(learning2014, mapping = aes(col=gender, alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
 p
 summary(learning2014)
+```
+
+```{r}
+malli <- lm(points ~ attitude + stra + surf, data=learning2014)
+summary(malli)
+```
+The only variable with enough significance in p-value is attitude. This is the reason why we remove stra and surf variables from the model.
+
+```{r}
+malli <- lm(points ~ attitude, data=learning2014)
+summary(malli)
+```
+Whoo! We got the model!
+```{r}
+library(ggplot2)
+plot(malli, which=c(1, 2,5), col = "turquoise2",  lwd = 3)
 ```
 
