@@ -13,4 +13,21 @@ colnames(alc)
 
 The data is about students alcohol consumption. 
 
-I'm going to conduct an analysis on relationships between high/low alcohol consumption and sex, age and the grades G1, G2 and G3,
+I'm going to conduct an analysis on relationships between high/low alcohol consumption and sex, age and the grades G1, G2 and G3.
+
+My hypothesis is that high alcohol consumption leads to lower grades. Also I want to see if age or sex has some kind of an effect.
+
+# Drawing the plots and figuring out how my hypothesis begins to look.
+
+```{r}
+library(ggplot2)
+g1 <- ggplot(alc, aes(x = high_use, y = G1, col = sex))
+g1 + geom_boxplot() + ylab("grade")
+
+g2 <- ggplot(alc, aes(x = high_use, y = G2, col = sex))
+g2 + geom_boxplot() + ylab("grade")
+
+g3 <- ggplot(alc, aes(x = high_use, y = G3, col = sex))
+g3 + geom_boxplot() + ylab("grade")
+
+```
