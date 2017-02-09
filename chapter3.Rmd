@@ -15,19 +15,86 @@ The data is about students alcohol consumption.
 
 I'm going to conduct an analysis on relationships between high/low alcohol consumption and sex, age and the grades G1, G2 and G3.
 
-My hypothesis is that high alcohol consumption leads to lower grades. Also I want to see if age or sex has some kind of an effect.
+My hypothesis is that lower grades lead to higher alcohol consumption. Also I want to see if age or sex has some kind of an effect.
 
 # Drawing the plots and figuring out how my hypothesis begins to look.
 
+
+```{r, echo=F}
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+```
+
 ```{r}
 library(ggplot2)
-g1 <- ggplot(alc, aes(x = high_use, y = G1, col = sex))
-g1 + geom_boxplot() + ylab("grade")
+p1 <- ggplot(alc, aes(x = high_use, y = G1, col = sex)) + geom_boxplot() + ylab(" first period grade")
 
-g2 <- ggplot(alc, aes(x = high_use, y = G2, col = sex))
-g2 + geom_boxplot() + ylab("grade")
+p2 <- ggplot(alc, aes(x = high_use, y = G2, col = sex)) + geom_boxplot() + ylab("second period grade")
 
-g3 <- ggplot(alc, aes(x = high_use, y = G3, col = sex))
-g3 + geom_boxplot() + ylab("grade")
+p3 <- ggplot(alc, aes(x = high_use, y = G3, col = sex)) + geom_boxplot() + ylab("final grade")
+
+p4 <- ggplot(alc, aes(x = high_use, y = age, col = sex)) + geom_boxplot() + ylab("age")
+
+multiplot(p1, p2, p3, p4, cols = 2)
+
+```
+
+Now lets make a model based on the plots above. I'm trying to explain high usage of alcohol with grades, sex and age. I'm logistic regression model below.
+
+```{r}
+
+model2 <- glm(high_use ~ G1 + G2 + G3 + sex + age, family = "binomial", data = alc)
+
+summary(model2)
+
+```
+Now lets look at the results of model. To me it seems like the p-value is quite low and it indicates that only the variable sex is significant. Age and the grade variables have a much higher p-value which means that they are not that significant at all. 
+
+```{r}
+
 
 ```
