@@ -83,7 +83,7 @@ multiplot(p1, p2, p3, p4, cols = 2)
 
 ```
 
-Now lets make a model based on the plots above. I'm trying to explain high usage of alcohol with grades, sex and age. I'm logistic regression model below.
+Now lets make a model based on the plots above. I'm trying to explain high usage of alcohol with grades, sex and age. I'm using logistic regression model below.
 
 ```{r}
 
