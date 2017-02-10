@@ -1,7 +1,13 @@
 # Chapter 3: My data analysis on week 3
 
 ```{r} 
+library(dplyr)
+
+
+
 alc <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/alc.txt ", header=T, sep=",")
+
+dim(alc)
 
 colnames(alc)
 
@@ -94,6 +100,20 @@ summary(model2)
 ```
 Now lets look at the results of model. To me it seems like the p-value is quite low and it indicates that only the variable sex is significant. Age and the grade variables have a much higher p-value which means that they are not that significant at all. 
 
+```{r}
+
+OR <- coef(model2) %>% exp
+CI <- confint(model2) %>% exp
+
+```
+
+
+```{r}
+
+cbind(OR,CI)
+
+```
+
 
 I decided to leave out G2, G3 and age as they were not significant in the model. Then i made a new model below. Lets look at it again!
 
@@ -107,16 +127,31 @@ summary(model3)
 
 
 ```{r}
-# define a loss function (average prediction error)
+
+OR <- coef(model3) %>% exp
+CI <- confint(model3) %>% exp
+
+```
+
+
+```{r}
+
+cbind(OR,CI)
+
+```
+
+
+```{r}
 loss_func <- function(class, prob) {
   n_wrong <- abs(class - prob) > 0.5
   mean(n_wrong)
 }
 
-# call loss_func to compute the average number of wrong predictions in the (training) data
 loss_func(class = alc$high_use, prob = alc$probability)
 
-
-
 ```
+
+
 I got the number [1] 0.2801047 out but for some reason the R shows NaN when I knit it.
+
+
