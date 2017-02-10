@@ -21,9 +21,13 @@ The data is about students alcohol consumption.
 
 I'm going to conduct an analysis on relationships between high/low alcohol consumption and sex, age and the grades G1, G2 and G3.
 
-My hypothesis is that lower grades lead to higher alcohol consumption. Also I want to see if age or sex has some kind of an effect.
+My hypothesis were as follows:
 
-# Drawing the plots and figuring out how my hypothesis begins to look.
+H1: Lower grades lead to higher alcohol consumption. 
+H2: Male students drink more than female students.
+H3: The age variable doesn't have a lot of effect.
+
+# Drawing the plots and figuring out how my hypotheses begins to look.
 
 
 ```{r, echo=F}
@@ -77,7 +81,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 ```{r}
 library(ggplot2)
-p1 <- ggplot(alc, aes(x = high_use, y = G1, col = sex)) + geom_boxplot() + ylab(" first period grade")
+p1 <- ggplot(alc, aes(x = high_use, y = G1, col = sex)) + geom_boxplot() + ylab("first period grade")
 
 p2 <- ggplot(alc, aes(x = high_use, y = G2, col = sex)) + geom_boxplot() + ylab("second period grade")
 
@@ -88,8 +92,21 @@ p4 <- ggplot(alc, aes(x = high_use, y = age, col = sex)) + geom_boxplot() + ylab
 multiplot(p1, p2, p3, p4, cols = 2)
 
 ```
+We begin from the top left corner. The grades go from 0 to 20 and alcohol usage has a binary (0,1) value. The binary values is presented in false and high. There we see that first period grades are a little bit better when high alcohol usage gets the false value. we also see that the tails are long which means also higher outliers in the model.
 
-Now lets make a model based on the plots above. I'm trying to explain high usage of alcohol with grades, sex and age. I'm using logistic regression model below.
+The second picture in the left bottom corner tells quite the same story as the picture above but now y-scale is second period grade. Quite interesting is that the tails in the lower end of grade scale are high as there a dots in the grade = 0. That means outliers again.
+
+The third picture in the top right corner has final grade and alcohol consumption. We don't really see any large changes so let's move on.
+
+The fouth and final picture in the bottom right corner is very interesting. First of all we see that the age is quite low in the high alcohol usage for example compared to Finland. The mean value in female group is 16 and 17 in the male group. That is why it is also smart to look at the age factor in the whole data. It looks like this:
+```{r}
+summary(alc$age)
+
+```
+
+
+
+Now lets make a model based on the hypotheses above. I'm trying to explain high usage of alcohol with grades, sex and age. I'm using logistic regression model below.
 
 ```{r}
 
@@ -98,7 +115,11 @@ model2 <- glm(high_use ~ G1 + G2 + G3 + sex + age, family = "binomial", data = a
 summary(model2)
 
 ```
-Now lets look at the results of model. To me it seems like the p-value is quite low and it indicates that only the variable sex is significant. Age and the grade variables have a much higher p-value which means that they are not that significant at all. 
+Now lets look at the results of model. To me it seems like the p-value is quite low and it indicates that only the variable sex is significant. Age and the grade variables have a much higher p-value which means that they are not that significant at all. This could be because the model could also be used the otherway: explaining grades with high usage of alcohol. This is a valid point but with logistic regression we cannot easily make model this way so we leave it for another time.
+
+Now we calculate odd raiots and their CIs.
+
+
 
 ```{r}
 
@@ -114,8 +135,10 @@ cbind(OR,CI)
 
 ```
 
+Looking at the odd ratios the first thing we see that the risk of high use was about 2.6 times more likely in males than females. The next thing is that G1 gets quite low value as does the other grade variables G2 and G3. 
 
-I decided to leave out G2, G3 and age as they were not significant in the model. Then i made a new model below. Lets look at it again!
+
+I decided to leave out G2, G3 and age as they were not significant in the model. Then i made a new model below. The G1 could've also been left out but I wanted to keep one grade in the model as I first had the all three with.
 
 ```{r}
 
@@ -125,6 +148,9 @@ summary(model3)
 
 ```
 
+The result completely different now than compared to the first and G1 got the second *. It is looking a lot more significant now.
+
+Also the intercept rose from -3.895489 to -0.39990 which is a huge change.
 
 ```{r}
 
@@ -140,6 +166,25 @@ cbind(OR,CI)
 
 ```
 
+Second look at the odds ratios which look quite the same as the first time. Sex still has the highest prediction power.
+
+I drew a crosstab of probabilities. It tells that about 68% out of 92% of times the model predicted correctly low use and about 5% out of 8% the model was correct in trying to predict high alcohol usage.
+
+```{r}
+probabilities <- predict(model3, type = "response")
+
+alc <- mutate(alc, probability = probabilities)
+
+
+alc <- mutate(alc, prediction = probabilities > 0.5)
+
+table(high_use = alc$high_use, prediction = alc$prediction) %>% prop.table %>% addmargins
+
+
+```
+
+Then I calculated the penalty/loss rate and this tells how many times the model classified observations incorrectly. The average number of incorrect predictions was 0.2801047.
+
 
 ```{r}
 loss_func <- function(class, prob) {
@@ -152,6 +197,16 @@ loss_func(class = alc$high_use, prob = alc$probability)
 ```
 
 
-I got the number [1] 0.2801047 out but for some reason the R shows NaN when I knit it.
+The last step was to cross validate my model against randomly allocated parts of the alc data. I used a 10-fold cross-validation. The average amount of wrong preditions is around 30 which is higher than the one I got above
+```{r}
+
+library(boot)
+# K-fold cross-validation
+cv <- cv.glm(data = alc, cost = loss_func, glmfit = model3, K = 10)
+
+# average number of wrong answers
+cv$delta[1]
+
+```
 
 
