@@ -1,4 +1,4 @@
-# Chapter 2: My data analysis
+# Chapter 2: Data analysis with R and regression model
 
 - #2.1 Opening the data and checking the structure. Let's see what happens!
 

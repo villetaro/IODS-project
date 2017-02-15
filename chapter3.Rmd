@@ -1,4 +1,4 @@
-# Chapter 3: My data analysis on week 3
+# Chapter 3: Logistic regression
 
 ```{r} 
 library(dplyr)

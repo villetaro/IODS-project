@@ -38,6 +38,7 @@ corrplot(cor_matrix, order="hclust", addrect=2, bg="gold2", col=wb)
  
 
 ```
+
 Tähän kommentti muuttujien suhteesta toisiinsa.
 
 
@@ -52,14 +53,28 @@ summary(myboston_scaled)
 
 After we standardized all the means are now 0.
 
+```{r}
+myboston_scaled <- as.data.frame(myboston_scaled)
+
+```
+
 
 ```{r}
 cutoffs <- quantile(myboston_scaled$crim)
-labels <- c("low", "mod_low", "mod_high", "high")
-crim_cat <- cut(myboston_scaled$crim, breaks=cutoffs, include.lowest = TRUE, label = labels)
-table(crim_cat)
+
+labels <- c("low", "mod_low", "med_high", "high")
+
+crime_category <- cut(myboston_scaled$crim, breaks = cutoffs, include.lowest = TRUE, label = labels)
+
+table(crime_category)
 
 ```
+```{r}
+myboston_scaled <- dplyr::select(myboston_scaled, -crim)
+myboston_scaled <- data.frame(myboston_scaled, crime_category)
+str(myboston_scaled)
+```
+
 
 
 
@@ -71,4 +86,48 @@ test <- myboston_scaled[-eighty_perc,]
 
 ```
 
+
+```{r}
+lda.fit <- lda(crime_category ~ ., data = train)
+lda.fit
+
+```
+
+
+
+
+```{r}
+lda.arrows <- function(x, myscale = 0.5, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
+}
+classes <- as.numeric(train$crime_category)
+plot(lda.fit, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit, myscale = 2)
+
+
+
+```
+
+
+
+
+```{r}
+
+correct_classes <- test$crime_category
+test <- dplyr::select(test, -crime_category)
+
+```
+
+
+```{r}
+
+lda.pred <- predict(lda.fit, newdata = test)
+table(correct = correct_classes, predicted = lda.pred$class)
+
+```
 
