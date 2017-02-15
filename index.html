@@ -141,8 +141,7 @@ $(document).ready(function () {
 <li><a href="#about-the-project">About the project</a></li>
 <li><a href="#chapter-2-my-data-analysis">Chapter 2: My data analysis</a></li>
 <li><a href="#chapter-3-my-data-analysis-on-week-3">Chapter 3: My data analysis on week 3</a></li>
-<li><a href="#the-data-has-382-observations-and-35-variables-after-we-did-the-following-changes">The data has 382 observations and 35 variables after we did the following changes:</a></li>
-<li><a href="#drawing-the-plots-and-figuring-out-how-my-hypotheses-begins-to-look.">Drawing the plots and figuring out how my hypotheses begins to look.</a></li>
+<li><a href="#chapter-4---clustering-and-stuff">Chapter 4 - Clustering and stuff’</a></li>
 </ul>
 </div>
 
@@ -300,21 +299,12 @@ dim(alc)</code></pre>
 ## [21] &quot;activities&quot; &quot;higher&quot;     &quot;romantic&quot;   &quot;famrel&quot;     &quot;freetime&quot;  
 ## [26] &quot;goout&quot;      &quot;Dalc&quot;       &quot;Walc&quot;       &quot;health&quot;     &quot;absences&quot;  
 ## [31] &quot;G1&quot;         &quot;G2&quot;         &quot;G3&quot;         &quot;alc_use&quot;    &quot;high_use&quot;</code></pre>
-</div>
-<div id="the-data-has-382-observations-and-35-variables-after-we-did-the-following-changes" class="section level1">
-<h1>The data has 382 observations and 35 variables after we did the following changes:</h1>
-<ul>
-<li>The variables not used for joining the two data have been combined by averaging (including the grade variables)</li>
-<li>‘alc_use’ is the average of ‘Dalc’ and ‘Walc’</li>
-<li>‘high_use’ is TRUE if ‘alc_use’ is higher than 2 and FALSE otherwise</li>
-</ul>
+<p>The data has 382 observations and 35 variables after we did the following changes: - The variables not used for joining the two data have been combined by averaging (including the grade variables) - ‘alc_use’ is the average of ‘Dalc’ and ‘Walc’ - ‘high_use’ is TRUE if ‘alc_use’ is higher than 2 and FALSE otherwise</p>
 <p>The data is about students alcohol consumption.</p>
 <p>I’m going to conduct an analysis on relationships between high/low alcohol consumption and sex, age and the grades G1, G2 and G3.</p>
 <p>My hypothesis were as follows:</p>
 <p>H1: Lower grades lead to higher alcohol consumption. H2: Male students drink more than female students. H3: The age variable doesn’t have a lot of effect.</p>
-</div>
-<div id="drawing-the-plots-and-figuring-out-how-my-hypotheses-begins-to-look." class="section level1">
-<h1>Drawing the plots and figuring out how my hypotheses begins to look.</h1>
+<p>Drawing the plots and figuring out how my hypotheses begins to look.</p>
 <pre class="r"><code>library(ggplot2)
 p1 &lt;- ggplot(alc, aes(x = high_use, y = G1, col = sex)) + geom_boxplot() + ylab(&quot;first period grade&quot;)
 
@@ -444,7 +434,39 @@ cv &lt;- cv.glm(data = alc, cost = loss_func, glmfit = model3, K = 10)
 
 # average number of wrong answers
 cv$delta[1]</code></pre>
-<pre><code>## [1] 0.2879581</code></pre>
+<pre><code>## [1] 0.3036649</code></pre>
+<hr />
+</div>
+<div id="chapter-4---clustering-and-stuff" class="section level1">
+<h1>Chapter 4 - Clustering and stuff’</h1>
+<p>-&gt; Lets begin!</p>
+<p>We begin this week by analysing data from R’s MASS package.</p>
+<pre class="r"><code>library(MASS)</code></pre>
+<pre><code>## 
+## Attaching package: 'MASS'</code></pre>
+<pre><code>## The following object is masked from 'package:dplyr':
+## 
+##     select</code></pre>
+<pre class="r"><code>data(&quot;Boston&quot;)
+
+str(Boston)</code></pre>
+<pre><code>## 'data.frame':    506 obs. of  14 variables:
+##  $ crim   : num  0.00632 0.02731 0.02729 0.03237 0.06905 ...
+##  $ zn     : num  18 0 0 0 0 0 12.5 12.5 12.5 12.5 ...
+##  $ indus  : num  2.31 7.07 7.07 2.18 2.18 2.18 7.87 7.87 7.87 7.87 ...
+##  $ chas   : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ nox    : num  0.538 0.469 0.469 0.458 0.458 0.458 0.524 0.524 0.524 0.524 ...
+##  $ rm     : num  6.58 6.42 7.18 7 7.15 ...
+##  $ age    : num  65.2 78.9 61.1 45.8 54.2 58.7 66.6 96.1 100 85.9 ...
+##  $ dis    : num  4.09 4.97 4.97 6.06 6.06 ...
+##  $ rad    : int  1 2 2 3 3 3 5 5 5 5 ...
+##  $ tax    : num  296 242 242 222 222 222 311 311 311 311 ...
+##  $ ptratio: num  15.3 17.8 17.8 18.7 18.7 18.7 15.2 15.2 15.2 15.2 ...
+##  $ black  : num  397 397 393 395 397 ...
+##  $ lstat  : num  4.98 9.14 4.03 2.94 5.33 ...
+##  $ medv   : num  24 21.6 34.7 33.4 36.2 28.7 22.9 27.1 16.5 18.9 ...</code></pre>
+<pre class="r"><code>dim(Boston)</code></pre>
+<pre><code>## [1] 506  14</code></pre>
 <hr />
 </div>
 

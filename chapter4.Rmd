@@ -1,0 +1,74 @@
+#Chapter 4: Clustering and stuff'
+-> Lets begin!
+
+We begin this week by analysing data from R's MASS package.
+
+```{r}
+
+library(MASS)
+library(corrplot)
+library(tidyverse)
+
+data("Boston")
+
+str(Boston)
+
+dim(Boston)
+
+```
+
+The data has 506 observations and 14 different variables. Next we plot the data to show the graphical overview and then we check how different variables compare to each other.
+
+```{r}
+summary(Boston)
+
+```
+Tähän kommentti yleisesti datasta.
+
+
+```{r}
+
+cor_matrix<-cor(Boston) 
+
+
+cor_matrix %>% round(digits = 2)
+wb <- c("white","black") 
+
+corrplot(cor_matrix, order="hclust", addrect=2, bg="gold2", col=wb)
+ 
+
+```
+Tähän kommentti muuttujien suhteesta toisiinsa.
+
+
+
+```{r}
+
+myboston_scaled <- scale(Boston)
+summary(myboston_scaled)
+
+
+```
+
+After we standardized all the means are now 0.
+
+
+```{r}
+cutoffs <- quantile(myboston_scaled$crim)
+labels <- c("low", "mod_low", "mod_high", "high")
+crim_cat <- cut(myboston_scaled$crim, breaks=cutoffs, include.lowest = TRUE, label = labels)
+table(crim_cat)
+
+```
+
+
+
+```{r}
+n <- nrow(myboston_scaled)
+eighty_perc <- sample(n, size = n * 0.8)
+train <- myboston_scaled[eighty_perc,]
+test <- myboston_scaled[-eighty_perc,]
+
+```
+
+

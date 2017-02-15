@@ -12,7 +12,7 @@ dim(alc)
 colnames(alc)
 
 ```
-# The data has 382 observations and 35 variables after we did the following changes:
+The data has 382 observations and 35 variables after we did the following changes:
  - The variables not used for joining the two data have been combined by averaging  (including the grade variables)
  - 'alc_use' is the average of 'Dalc' and 'Walc'
  - 'high_use' is TRUE if 'alc_use' is higher than 2 and FALSE otherwise
@@ -27,7 +27,7 @@ H1: Lower grades lead to higher alcohol consumption.
 H2: Male students drink more than female students.
 H3: The age variable doesn't have a lot of effect.
 
-# Drawing the plots and figuring out how my hypotheses begins to look.
+Drawing the plots and figuring out how my hypotheses begins to look.
 
 
 ```{r, echo=F}
