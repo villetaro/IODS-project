@@ -1,5 +1,5 @@
 ---
-title: "Ville Aro"
+title: "Ville T. Aro"
 output:
   html_document:
     theme: cosmo
