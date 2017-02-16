@@ -62,13 +62,16 @@ myboston_scaled <- as.data.frame(myboston_scaled)
 ```{r}
 cutoffs <- quantile(myboston_scaled$crim)
 
-labels <- c("low", "mod_low", "med_high", "high")
+labels <- c("low", "med_low", "med_high", "high")
 
 crime_category <- cut(myboston_scaled$crim, breaks = cutoffs, include.lowest = TRUE, label = labels)
 
 table(crime_category)
 
+
 ```
+
+
 ```{r}
 myboston_scaled <- dplyr::select(myboston_scaled, -crim)
 myboston_scaled <- data.frame(myboston_scaled, crime_category)
@@ -133,19 +136,19 @@ table(correct = correct_classes, predicted = lda.pred$class)
 
 Let's see how well the model actually worked. I made a little observation during this analysis that the model changes everytime when I ran the code as some of the numbers come from random variables. As you read this the number may look a little different but I try to get the overall look.
 
-
-```{r}
 The number of total observations
+```{r}
 
 total <- c(13+10+6+11+7+12+18+25)
 total
 
 ```
+
 We have 102 observations.
 
-
-```{r}
 The number of correct predictions in this instance.
+```{r}
+
 
 correct <- c(13+18+11+25)
 correct
@@ -174,3 +177,78 @@ At this time the model did ok but as I ran the code a couple of times the accura
 
 
 Now we reload the Boston dataset and standardize it. Then we take a look at the distances between the variables.
+
+
+```{r}
+New_Boston <- Boston
+
+str(New_Boston)
+
+New_Boston_scaled <- scale(New_Boston) %>% as.data.frame()
+
+str(New_Boston_scaled)
+```
+
+Now we calculate the distances.
+
+```{r}
+# Euclidean distance matrix using set.seed()
+set.seed(123)
+dist_eu <- dist(New_Boston_scaled)
+summary(dist_eu)
+
+
+```
+This is based on the Euclidean measure. And above you see the summary of the findings. Now we can start the clustering with the amount of 10 clusters.
+
+```{r}
+
+library(ggplot2)
+
+km <-kmeans(dist_eu, centers=10)
+pairs(New_Boston_scaled, col = km$cluster)
+
+```
+
+Now we want to optimize the amout of clusters so we don't have to guess it.
+
+
+```{r}
+k_max <- 10
+wss <- sapply(1:k_max, function(k){kmeans(dist_eu, k)$tot.withinss})
+plot(1:k_max, wss, type="b", xlab="Number of Clusters",
+  ylab="Within groups sum of squares")
+
+```
+
+It seems that the optimal amount of clusters is 2. So we run the cluser analysis again and then take a look at the plot.
+
+
+```{r}
+km <-kmeans(dist_eu, centers=2)
+pairs(New_Boston_scaled, col = km$cluster)
+
+```
+
+
+The last thing to do is 3d modeling
+
+```{r}
+
+library(plotly)
+model_predictors <- dplyr::select(train, -crime_category)
+
+# check the dimensions
+dim(model_predictors)
+dim(lda.fit$scaling)
+# matrix multiplication
+matrix_product <- as.matrix(model_predictors) %*% lda.fit$scaling
+matrix_product <- as.data.frame(matrix_product)
+
+labels <- c("low", "med_low", "med_high", "high")
+
+plot_ly(x = matrix_product$LD1, y = matrix_product$LD2, z = matrix_product$LD3, type= 'scatter3d', mode='markers', color = classes, 
+        colors=c("blue","yellow") )
+```
+
+
