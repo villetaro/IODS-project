@@ -131,3 +131,46 @@ table(correct = correct_classes, predicted = lda.pred$class)
 
 ```
 
+Let's see how well the model actually worked. I made a little observation during this analysis that the model changes everytime when I ran the code as some of the numbers come from random variables. As you read this the number may look a little different but I try to get the overall look.
+
+
+```{r}
+The number of total observations
+
+total <- c(13+10+6+11+7+12+18+25)
+total
+
+```
+We have 102 observations.
+
+
+```{r}
+The number of correct predictions in this instance.
+
+correct <- c(13+18+11+25)
+correct
+
+```
+
+We had 67 correctly predicted observations.
+
+```{r}
+
+wrong <- c(102-67)
+wrong
+
+```
+And 35 of the observations were incorrectly predicted.
+
+The accuracy of our model is the following:
+
+```{r}
+ratio <- c(correct/total)
+ratio
+
+```
+
+At this time the model did ok but as I ran the code a couple of times the accuracy was quite different (0.66 as I write this).
+
+
+Now we reload the Boston dataset and standardize it. Then we take a look at the distances between the variables.
