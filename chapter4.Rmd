@@ -1,14 +1,18 @@
 #Chapter 4: Clustering and stuff'
--> Lets begin!
 
-We begin this week by analysing data from R's MASS package.
+We begin this week by analysing data from R's MASS package. The data contains information about The Boston area house-prices.
 
-```{r}
+```{r, include=FALSE}
 
 library(MASS)
 library(corrplot)
 library(tidyverse)
+library(plotly)
+library(dplyr)
 
+```
+
+```{r}
 data("Boston")
 
 str(Boston)
@@ -23,8 +27,7 @@ The data has 506 observations and 14 different variables. Next we plot the data 
 summary(Boston)
 
 ```
-Tähän kommentti yleisesti datasta.
-
+This week we focus on the crim variable.
 
 ```{r}
 
@@ -39,9 +42,11 @@ corrplot(cor_matrix, order="hclust", addrect=2, bg="gold2", col=wb)
 
 ```
 
-Tähän kommentti muuttujien suhteesta toisiinsa.
+This is a correlation plot which explain the correlations of different variables when being compared to each other. The bigger the spot the stronger the correlation.
 
+One of the biggest one in the positive side is rad - tax. From the negative correlation side the biggest ones are dis - indus, dis - nox and dis - age.
 
+Next we standardize the data.
 
 ```{r}
 
@@ -71,6 +76,8 @@ table(crime_category)
 
 ```
 
+Now we drop the old crime rate variable from the dataset. Then we divide the dataset to train and test sets, so that 80% of the data belongs to the train set.
+
 
 ```{r}
 myboston_scaled <- dplyr::select(myboston_scaled, -crim)
@@ -89,6 +96,7 @@ test <- myboston_scaled[-eighty_perc,]
 
 ```
 
+Now we fit the linear discriminant analysis on the train set. We use the categorical crime rate as the target variable and all the other variables in the dataset as predictor variables. This gives us an idea how crime rate interacts with the other variables.
 
 ```{r}
 lda.fit <- lda(crime_category ~ ., data = train)
@@ -97,7 +105,7 @@ lda.fit
 ```
 
 
-
+Now we draw the LDA biplot
 
 ```{r}
 lda.arrows <- function(x, myscale = 0.5, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
@@ -117,7 +125,7 @@ lda.arrows(lda.fit, myscale = 2)
 ```
 
 
-
+Now we predict the classes with the LDA model on the test data. We can help our analysis by cross tabulating the results with the crime categories from the test set.
 
 ```{r}
 
@@ -125,7 +133,7 @@ correct_classes <- test$crime_category
 test <- dplyr::select(test, -crime_category)
 
 ```
-
+We see that in our model the first three groups (low, med_low and med_high) are very close to each other. The grouping is not that obvious and could use some more thought.
 
 ```{r}
 
@@ -199,7 +207,7 @@ summary(dist_eu)
 
 
 ```
-This is based on the Euclidean measure. And above you see the summary of the findings. Now we can start the clustering with the amount of 10 clusters.
+This is based on the Euclidean measure. And above you see the summary of the findings. Now we can start the clustering with the amount of 10 clusters. 10 is a safe bet that nothing would go wrong, below I calculate the optimum amount of clusters.
 
 ```{r}
 
@@ -210,7 +218,10 @@ pairs(New_Boston_scaled, col = km$cluster)
 
 ```
 
-Now we want to optimize the amout of clusters so we don't have to guess it.
+
+As there is 10 clusters at the moment it is really hard to see what actually happens in this plot. 
+
+Because of this we want to optimize the amount of clusters so we don't have to guess it and then we can take a look at the plot again..
 
 
 ```{r}
@@ -221,7 +232,7 @@ plot(1:k_max, wss, type="b", xlab="Number of Clusters",
 
 ```
 
-It seems that the optimal amount of clusters is 2. So we run the cluser analysis again and then take a look at the plot.
+It seems that the optimal amount of clusters is 2. So we run the cluster analysis again and then take a look at the plot.
 
 
 ```{r}
@@ -230,22 +241,39 @@ pairs(New_Boston_scaled, col = km$cluster)
 
 ```
 
+The above picture is quite similar compared to the one a moment ago but now the clusters are also included. The variables tax and  rad seem to work the best as in the differences are most clear compared to the plot without the clusters.
 
-The last thing to do is 3d modeling
+Next we perform LDA using the clusters as target classes. We include all the variables in the Boston data in the LDA model.
 
 ```{r}
 
-library(plotly)
+km <-kmeans(dist_eu, centers = 3)
+lda.fits <- lda(km$cluster~., data = myboston_scaled)
+lda.fits
+
+```
+
+Now we visualize the results with a biplot and then analyze the results.
+```{r}
+plot(lda.fits, dimen = 2, col = classes) 
+lda.arrows(lda.fits, myscale = 1)
+
+```
+
+Using 3 clusters for K-means analysis, the most influencial linear separators are nox and chas. This gives us an idea that they would be the best variables to predict new observations if those would appear.
+
+The last thing to do is 3d modeling. It really tops this weeks project as it gives us a really clear model that we can also move 360 degrees. It helps us analyse the findings and understand the model.
+
+```{r}
 model_predictors <- dplyr::select(train, -crime_category)
 
-# check the dimensions
+
 dim(model_predictors)
 dim(lda.fit$scaling)
-# matrix multiplication
+
 matrix_product <- as.matrix(model_predictors) %*% lda.fit$scaling
 matrix_product <- as.data.frame(matrix_product)
 
-labels <- c("low", "med_low", "med_high", "high")
 
 plot_ly(x = matrix_product$LD1, y = matrix_product$LD2, z = matrix_product$LD3, type= 'scatter3d', mode='markers', color = classes, 
         colors=c("blue","yellow") )
