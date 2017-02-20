@@ -2,7 +2,7 @@
 title: "Ville T. Aro"
 output:
   html_document:
-    theme: cosmo
+    theme: sandstone
     toc: true
     toc_depth: 2
     fig_caption: true
@@ -29,6 +29,11 @@ output:
 ***
   
 ```{r child = "chapter4.Rmd"}
+```
+
+***
+  
+```{r child = "chapter5.Rmd"}
 ```
 
 ***

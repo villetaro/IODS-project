@@ -24,7 +24,7 @@ summary(gii)
 
 hd_new <- c("HDI_Rank", "Country", "HDI_Cap", "Life_Expectancy", "Exp_education_years", "Mean_education_years",
             "GNI_Cap", "GNI.HDI_Rank")
-gii_new <- c("GII_Rank", "Country", "GII", "Mat.mor_Ratio", "Birth_Rate", "Parlament.rep_%", "Second.Edu_F",
+gii_new <- c("GII_Rank", "Country", "GII", "Mat.mor_Ratio", "Birth_Rate", "Parlament.rep_", "Second.Edu_F",
              "Second.Edu_M", "Labour.Part_F", "Labour.Part_M")
 
 colnames(hd) <- hd_new
@@ -72,7 +72,57 @@ write.csv(human, file="human.csv")
 ##########################################################33
 ## Chapter 5 begins here
 
+library(stringr)
+
+as.numeric(human$GNI_Cap)
+
+str(human)
+dim(human)
+
+# Exclude unneeded variables: keep only the columns matching the following variable names (described in the meta file above):  
+# "Country", "Edu2.FM", "Labo.FM", "Edu.Exp", "Life.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F"
 
 
+keep_columns <- c("Country", "Edu2_Ratio", "Lab_Ratio", "Exp_education_years", 
+                  "Life_Expectancy", "GNI_Cap", "Mat.mor_Ratio", "Birth_Rate", "Parlament.rep_")
+
+human <- select(human, one_of(keep_columns))
+
+colnames(human)
+
+# It worked! (I calculated that we should have 9 variables now and that we do)
+
+# print out a completeness indicator of the 'human' data
+complete.cases(human)
+
+# print out the data along with a completeness indicator as the last column
+data.frame(human[-1], comp = complete.cases(human))
+
+# filter out all rows with NA values
+human_ <- filter(human, complete.cases(human))
+
+# look at the last 10 observations of human
+tail(human, n=10)
+
+# define the last indice we want to keep
+last <- nrow(human) - 7
+last
+# choose everything until the last 7 observations
+human_ <- human[1:155, ]
+
+# add countries as rownames
+rownames(human_) <- human_$Country
 
 
+#Removing the Country variable
+human_ <- dplyr::select(human_, -Country)
+
+str(human_)
+
+#'data.frame':	155 obs. of  8 variables
+
+#Saving the data again, for the last time!
+
+write.csv(human_, file="human.csv", row.names = T)
+
+# Aaaand we are done! Now to the analysis part!
