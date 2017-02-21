@@ -1,3 +1,64 @@
 #Chapter 5: Dimensionality reduction techniques
 
 Lets begin the Chapter 5 by loading the data
+```{r, include=FALSE}
+library(ggplot2)
+library(GGally)
+library(MASS)
+library(corrplot)
+library(tidyverse)
+library(plotly)
+library(dplyr)
+
+```
+
+
+
+```{r}
+human <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human2.txt", header = T, sep=",")
+
+dim(human)
+str(human)
+
+```
+
+
+Next we look at the graphical overview of the data.
+
+
+```{r}
+ggpairs(human)
+
+```
+
+```{r}
+summary(human)
+```
+
+Next we perform principal component analysis (PCA) on the not standardized human data. 
+
+
+```{r}
+# perform principal component analysis (with the SVD method)
+pca_human <- prcomp(human)
+
+# draw a biplot of the principal component representation and the original variables
+biplot(pca_human, choices = 1:2)
+
+```
+
+The picture doesn't look very good as we have not scaled the data. This is the reason why it is important to scale the data.
+
+
+```{r}
+human_std <- scale(human)
+
+pca_human11 <- prcomp(human_std)
+
+biplot(pca_human11, choices = 1:2, cex = c(0.8, 1), col = c("grey40", "deeppink2"))
+
+
+```
+
+
+
