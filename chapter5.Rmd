@@ -30,12 +30,26 @@ Next we look at the graphical overview of the data.
 
 
 ```{r}
-ggpairs(human)
+p <- ggpairs(human, mapping = aes(col="blue", alpha=0.3), lower = list(combo = wrap("facethist", bins = 20)))
 
+p
 ```
 
 ```{r}
 summary(human)
+```
+
+
+```{r}
+p2 <- ggplot(human, aes(x=GNI, y= Life.Exp)) + geom_point(col="deepskyblue1") + geom_smooth()
+
+p2
+```
+
+```{r}
+p2 <- ggplot(human, aes(x=GNI, y= Edu.Exp)) + geom_point(col="red2") + geom_smooth()
+
+p2
 ```
 
 Next we perform principal component analysis (PCA) on the not standardized human data. 
