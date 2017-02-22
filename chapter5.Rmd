@@ -11,7 +11,6 @@ library(plotly)
 library(dplyr)
 library(FactoMineR)
 require(ggplot2)
-library(tabplot)
 
 ```
 
@@ -95,12 +94,92 @@ str(tea)
 ```
 
 
-Lets continue tomorrow and try to find some idea to visualize 36 variables.
+I decided to drop out some variables as there was 36 of them. It was quite impossible to plot and make a grapical overview with a such variety of different variables.
 ```{r}
+keep <- c("friends", "Tea", "resto", "age_Q", "frequency")
 
+teatimes <- dplyr::select(tea, one_of(keep))
+
+str(teatimes)
 
 
 ```
 
 
+```{r, include= FALSE}
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+```
+
+```{r}
+g1 <- ggplot(teatimes, aes(friends)) + geom_bar() + theme_grey() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+g2 <- ggplot(teatimes, aes(Tea)) + geom_bar()+ theme_grey() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+g3 <- ggplot(teatimes, aes(resto)) + geom_bar() + theme_grey() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+g4 <- ggplot(teatimes, aes(age_Q)) + geom_bar()+ theme_grey() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+g5 <- ggplot(teatimes, aes(frequency)) + geom_bar()+ theme_grey() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 10))
+
+multiplot(g1, g2, g3, g4, g5, cols=3)
+
+
+```
+
+
+```{r}
+mca <- MCA(X = teatimes, graph=F)
+
+summary(mca)
+
+
+```
+
+
+```{r}
+plot(mca, invisible=c("ind"), habillage = "quali")
+
+```
 
