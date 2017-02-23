@@ -1,6 +1,6 @@
 #Chapter 5: Dimensionality reduction techniques
 
-Lets begin the Chapter 5 by loading the data
+Lets begin the Chapter 5 by loading the data.
 ```{r, include=FALSE}
 library(ggplot2)
 library(GGally)
@@ -14,7 +14,7 @@ require(ggplot2)
 
 ```
 
-
+This weeks data contains a large variety of countries. We look for example their life expectancy, GNI and education expectancy.
 
 ```{r}
 human <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human2.txt", header = T, sep=",")
@@ -24,8 +24,8 @@ str(human)
 
 ```
 
-
-Next we look at the graphical overview of the data.
+We have 155 observations (countries) and 8 different variables.
+Next we look at the graphical overview of the data and try to see correlations between the variables.
 
 
 ```{r}
@@ -33,17 +33,27 @@ p <- ggpairs(human, mapping = aes(col="blue", alpha=0.3), lower = list(combo = w
 
 p
 ```
+There is a lot of significant correlations between the variables. For example Mat.mor - Ado.birth has 0.759 correlation.
 
 ```{r}
 summary(human)
 ```
 
+Next I chose a couple of interesting variables and tried to explain them with GNI also known as Gross National Income ($). I chose two variables: Life Expectancy (in years) and Education Expectancy (in years). 
 
 ```{r}
 p2 <- ggplot(human, aes(x=GNI, y= Life.Exp)) + geom_point(col="deepskyblue1") + geom_smooth( col = "red2")
 
 p2
 ```
+
+```{r}
+
+model5 <- lm(Life.Exp ~ GNI, human)
+summary(model5)
+plot(model5,  which=c(1), col = "turquoise2",  lwd = 3)
+```
+As we see there are quite a few outliers such as Qatar that make the model hard to fit.
 
 ```{r}
 p3 <- ggplot(human, aes(x=GNI, y= Edu.Exp)) + geom_point(col="red2") + geom_smooth(col = "royalblue1")
@@ -53,6 +63,12 @@ p3
 
 Next we perform principal component analysis (PCA) on the not standardized human data. 
 
+```{r}
+model6 <- lm(Edu.Exp ~ GNI, human)
+summary(model6)
+plot(model6,  which=c(1), col = "turquoise2",  lwd = 3)
+```
+This model also suffers a bit as there are those large outliers such as Niger and Qatar.
 
 ```{r, warning=FALSE}
 # perform principal component analysis (with the SVD method)
