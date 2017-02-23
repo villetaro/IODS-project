@@ -79,8 +79,7 @@ biplot(pca_human, choices = 1:2, cex = c(0.5, 1), col = c("black", "red2"), main
 
 ```
 
-The picture doesn't look very good as we have not scaled the data. This is the reason why it is important to scale the data.
-
+The picture doesn't look very good as we have not standardised the data. A lot of the observations are in the same spot and there seems to be very little correlation. Lets standardise the data and see how the situation changes.
 
 ```{r}
 human_std <- scale(human)
@@ -91,6 +90,7 @@ summary(pca_human11)
 
 ```
 
+The data is now standardised and we can draw a new biplot of the first two principal components.
 
 ```{r}
 
@@ -100,7 +100,7 @@ biplot(pca_human11, choices = 1:2, cex = c(0.6, 1.2), col = c("black", "red2"),m
 ```
 
 
-Next we load the Tea dataset from Factominer package.
+Next we go the #part 2 and start it by loading the Tea dataset from Factominer package.
 ```{r}
 
 data("tea")
