@@ -99,8 +99,9 @@ biplot(pca_human11, choices = 1:2, cex = c(0.6, 1.2), col = c("black", "red2"),m
 
 ```
 
+Now the arrows are much more clear and we can see those correlations between the variables much better. Also the countries are not anymore in the same spot as they are all over the picture. The biggest correltions against the first two principal components are Labo.Fm and Parli.F. It seems to be a pretty good idea to use these first two components in the biplot and analysis as they have a large part of the variance combined.
 
-Next we go the #part 2 and start it by loading the Tea dataset from Factominer package.
+Next we go the #part 2 and start it by loading the Tea dataset from Factominer package. It includes 300 observations about how people drink their tea and different habits that are part of the tea drinking. 
 ```{r}
 
 data("tea")
@@ -120,7 +121,7 @@ str(teatimes)
 
 
 ```
-
+These are the variables that I decided to keep. Next I drew a multiplot of them where we can see better how they look.
 
 ```{r, include= FALSE}
 # Multiple plot function
@@ -183,7 +184,9 @@ multiplot(g1, g2, g3, g4, g5, cols=3)
 
 
 ```
+The most interesting observations are that almost 2/3 of the people drink tea with friends, often not in a restaurant, once or twice a day. The most popular tea is Earl Grey with a large margin. From the age graph we can see that the most answers come from the youngest group which is 15-24 years old people. After that the rest are pretty equal amounts.
 
+Now we do a MCA also known as Multiple Correspondence Analysis. This means that we represent the data in a low-dimensional Euclidean space. It is a counterpart of principal component analysis that we did above.
 
 ```{r}
 mca <- MCA(X = teatimes, graph=F)
@@ -193,9 +196,13 @@ summary(mca)
 
 ```
 
+We see the interesting values in v-test where the test-value is 1.96 that we compare against. A lot of times the v-test value is greater than |1.96| which means that a lot them are significant.
+
+The last thing to do is to look at the grapical view of the MCA.
 
 ```{r}
 plot(mca, invisible=c("ind"), habillage = "quali")
 
 ```
 
+We see that the first two dimensions hold the most variance. Dim 1 has 13.55% and Dim 2 has 12.26%. The biggest outliers are green and black as we saw before that the most people in this dataset drink Earl Grey tea. From this we also see that the old people (+60) prefer black tea to others.
